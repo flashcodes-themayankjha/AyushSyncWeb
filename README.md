@@ -1,38 +1,38 @@
 # AyushSync Website
 
-This repository contains the frontend web application for the AyushSync platform. The AyushSync Website provides a user-friendly interface to interact with Ayush-related data, offering features such as user authentication, audit log viewing, problem list management, data search, and data upload capabilities.
+## Project Description
+The AyushSync Website serves as the frontend interface for the AyushSync platform, providing users with a seamless experience to interact with the system. This application is built using modern web technologies to ensure a responsive, efficient, and user-friendly experience.
 
 ## Features
-
-*   **User Authentication:** Secure login and registration for users.
-*   **Audit Logs:** View a comprehensive history of system activities.
-*   **Problem List:** Manage and track various problems or issues.
-*   **Data Search:** Efficiently search through Ayush-related data.
-*   **Data Upload:** Upload new data to the AyushSync platform.
+- User Authentication (Login/Signup)
+- Problem List Viewing
+- Audit Logs
+- File Upload functionality
+- Search capabilities
+- Responsive UI/UX
 
 ## Technologies Used
+- **React:** A JavaScript library for building user interfaces.
+- **Vite:** A fast build tool that provides an extremely fast development experience for modern web projects.
+- **React Router DOM:** For declarative routing in React applications.
+- **Axios:** Promise based HTTP client for the browser and node.js.
+- **Tailwind CSS (or similar utility-first CSS framework):** For rapid UI development and styling. (Assuming based on modern React projects, though not explicitly in package.json)
+- **ESLint:** For maintaining code quality and consistency.
 
-*   **React:** A JavaScript library for building user interfaces.
-*   **Vite:** A fast build tool that provides an extremely fast development experience.
-*   **React Router:** For declarative routing in the application.
-*   **CSS:** For styling the application.
-*   **Axios (assumed):** For making HTTP requests to the backend API.
+## Setup
 
-## Setup and Installation
-
-Follow these steps to get the AyushSync Website up and running on your local machine.
+To get the AyushSync Website up and running on your local machine, follow these steps:
 
 ### Prerequisites
+- Node.js (v14 or higher recommended)
+- npm or yarn
 
-*   Node.js (LTS version recommended)
-*   npm or yarn
-
-### Installation Steps
+### Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/flashcodes-themayankjha/AyushSyncWeb.git
-    cd AyushSyncWeb
+    git clone <repository_url>
+    cd AyushWeb
     ```
 
 2.  **Install dependencies:**
@@ -42,17 +42,16 @@ Follow these steps to get the AyushSync Website up and running on your local mac
     yarn install
     ```
 
-3.  **Environment Variables (if applicable):**
-    If your project uses environment variables (e.g., for API endpoints), create a `.env` file in the root directory based on a `.env.example` (if provided) and fill in the necessary values. For example:
+3.  **Environment Variables:**
+    Create a `.env` file in the root directory of the project and add the necessary environment variables. An example might look like this:
     ```
-    VITE_API_BASE_URL=https://ayush-auth.vercel.app
+    VITE_API_BASE_URL=http://localhost:8000/api
     ```
+    (Adjust `VITE_API_BASE_URL` to your backend API endpoint)
 
-### Running the Application
+### Running the Development Server
 
-#### Development Mode
-
-To run the application in development mode with hot-reloading:
+To start the development server:
 
 ```bash
 npm run dev
@@ -62,7 +61,7 @@ yarn dev
 
 The application will typically be available at `http://localhost:5173` (or another port if 5173 is in use).
 
-#### Production Build
+### Building for Production
 
 To build the application for production:
 
@@ -72,33 +71,13 @@ npm run build
 yarn build
 ```
 
-This will create a `dist` directory with the optimized production build. You can then serve these static files using a web server of your choice.
+This will create a `dist` directory with the optimized production build.
 
-## Project Structure
-
-```
-.
-├── public/                 # Static assets
-├── src/                    # Source code
-│   ├── assets/             # Images, JSON animations, etc.
-│   ├── components/         # Reusable React components
-│   ├── App.jsx             # Main application component
-│   ├── Login.jsx           # Login page component
-│   ├── AuditLogs.jsx       # Audit logs page component
-│   ├── Problem_list.jsx    # Problem list page component
-│   ├── Search.jsx          # Search page component
-│   ├── Upload.jsx          # Upload page component
-│   ├── router.jsx          # React Router configuration
-│   └── ...                 # Other core files
-├── package.json            # Project dependencies and scripts
-├── vite.config.js          # Vite configuration
-└── README.md               # This file
-```
+## Deployment
+This project is configured for deployment on platforms like Vercel, as indicated by the `public/_redirects` file.
 
 ## Contributing
-
-If you wish to contribute, please follow standard GitHub practices: fork the repository, create a new branch for your features or bug fixes, and submit a pull request.
+Contributions are welcome! Please feel free to submit pull requests or open issues.
 
 ## License
-
-(Optional: Add your project's license information here)
+[Specify your license here, e.g., MIT, Apache 2.0, etc.]
