@@ -3,7 +3,7 @@ import cardiogram from './assets/cardiogram.png';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export default function Login() {
+export default function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     abhaid: '',
@@ -11,7 +11,7 @@ export default function Login() {
   });
   const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // New state for success messages
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,26 +24,28 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); // Clear previous errors
+    setSuccessMessage(''); // Clear previous success messages
 
     const apiBaseUrl = 'https://ayush-auth.vercel.app';
 
     if (!otpSent) {
-      // Request OTP for Login
+      // Request OTP for Registration
       try {
-        const response = await axios.post(`${apiBaseUrl}/request-login-otp`, null, {
+        const response = await axios.post(`${apiBaseUrl}/request-registration-otp`, null, {
           params: { abha_id: formData.abhaid }
         });
         if (response.status === 200) {
           setOtpSent(true);
+          setSuccessMessage('OTP sent successfully to your registered mobile number!');
         }
       } catch (err) {
         setError(err.response?.data?.detail || 'Failed to send OTP. Please check the ABHA ID and try again.');
         console.error('OTP Request Error:', err);
       }
     } else {
-      // Verify OTP and get token
+      // Verify OTP and complete registration
       try {
-        const response = await axios.post(`${apiBaseUrl}/token`, null, {
+        const response = await axios.post(`${apiBaseUrl}/register-verify-otp`, null, {
           params: {
             abha_id: formData.abhaid,
             otp: formData.otp
@@ -52,13 +54,13 @@ export default function Login() {
         if (response.data.access_token) {
           localStorage.setItem('authToken', response.data.access_token);
           localStorage.setItem('abhaId', formData.abhaid);
-          setSuccessMessage('Logged in successfully!'); // Set success message
+          setSuccessMessage('Registration successful! Redirecting to home page...');
           setTimeout(() => {
-            navigate('/'); // Redirect to home page after a short delay
-          }, 1500); // Redirect after 1.5 seconds
+            navigate('/'); // Redirect to home page on successful registration
+          }, 1500);
         }
       } catch (err) {
-        setError(err.response?.data?.detail || 'Invalid OTP. Please try again.');
+        setError(err.response?.data?.detail || 'Invalid OTP or registration failed. Please try again.');
         console.error('OTP Verification Error:', err);
       }
     }
@@ -78,8 +80,8 @@ export default function Login() {
       </nav>
       <div className="bg-slate-100 min-h-screen flex flex-col items-center justify-center font-sans pt-24 sm:pt-28 lg:pt-32 px-4">
         <div className="w-full max-w-lg mx-auto">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">Login with ABHA ID</h1>
-          <p className="text-gray-500 mb-8 text-center">Securely access your health records</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">Register with ABHA ID</h1>
+          <p className="text-gray-500 mb-8 text-center">Create your account to access health records</p>
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <form onSubmit={handleSubmit} noValidate>
               <div className="space-y-6">
@@ -127,22 +129,21 @@ export default function Login() {
                   type="submit"
                   className="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-transform transform hover:scale-105 shadow-md"
                 >
-                  {otpSent ? 'Verify & Login' : 'Send OTP'}
+                  {otpSent ? 'Verify & Register' : 'Send OTP'}
                 </button>
               </div>
             </form>
             <p className="mt-6 text-center text-sm text-gray-600">
-              Don't have an account? <Link to="/signup" className="text-green-600 hover:underline">Sign up here</Link>
+              Already have an account? <Link to="/login" className="text-green-600 hover:underline">Login here</Link>
             </p>
           </div>
         </div>
         <div className="w-full max-w-lg mx-auto text-center text-sm text-gray-600 mt-6">
           <p>
-            By logging in, you agree to our <Link to="/terms" className="text-green-600 hover:underline">Terms of Service</Link> and <Link to="/privacy_policy" className="text-green-600 hover:underline">Privacy Policy</Link>.
+            By registering, you agree to our <Link to="/terms" className="text-green-600 hover:underline">Terms of Service</Link> and <Link to="/privacy_policy" className="text-green-600 hover:underline">Privacy Policy</Link>.
           </p>
         </div>
       </div>
     </>
   );
 }
-

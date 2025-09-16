@@ -2,6 +2,7 @@ import { createBrowserRouter, Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import App from "./App.jsx";
 import Login from "./Login.jsx";
+import Signup from "./Signup.jsx";
 import Problem_list from "./Problem_list.jsx";
 import Search from "./Search.jsx";
 import Upload from "./Upload.jsx";
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
         children: [
             { index: true, element: <App /> },
             { path: "login", element: <Login /> },
+            { path: "signup", element: <Signup /> },
             { path: "about", element: <About /> },
             { path: "contact", element: <Comingsoon /> },
             { path: "blog", element: <Comingsoon /> },
