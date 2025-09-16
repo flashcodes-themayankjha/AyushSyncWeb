@@ -8,6 +8,11 @@ export default function Signup() {
   const [formData, setFormData] = useState({
     abhaid: '',
     otp: '',
+    fullName: '',
+    dob: '',
+    gender: '',
+    phone: '',
+    email: '',
   });
   const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState('');
@@ -45,11 +50,14 @@ export default function Signup() {
     } else {
       // Verify OTP and complete registration
       try {
-        const response = await axios.post(`${apiBaseUrl}/register-verify-otp`, null, {
-          params: {
-            abha_id: formData.abhaid,
-            otp: formData.otp
-          }
+        const response = await axios.post(`${apiBaseUrl}/register-verify-otp`, {
+          abha_id: formData.abhaid,
+          otp: formData.otp,
+          full_name: formData.fullName,
+          dob: formData.dob,
+          gender: formData.gender,
+          phone: formData.phone,
+          email: formData.email,
         });
         if (response.data.access_token) {
           localStorage.setItem('authToken', response.data.access_token);
@@ -85,6 +93,87 @@ export default function Signup() {
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <form onSubmit={handleSubmit} noValidate>
               <div className="space-y-6">
+                {!otpSent && (
+                  <>
+                    <div>
+                      <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
+                        placeholder="Enter your full name"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-1">
+                        Date of Birth
+                      </label>
+                      <input
+                        type="date"
+                        id="dob"
+                        name="dob"
+                        value={formData.dob}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">
+                        Gender
+                      </label>
+                      <select
+                        id="gender"
+                        name="gender"
+                        value={formData.gender}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
+                        required
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
+                        placeholder="Enter your phone number"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
+                        placeholder="Enter your email address"
+                        required
+                      />
+                    </div>
+                  </>
+                )}
                 <div>
                   <label htmlFor="abhaid" className="block text-sm font-medium text-gray-700 mb-1">
                     ABHA ID
