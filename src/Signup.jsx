@@ -9,8 +9,6 @@ export default function Signup() {
     abhaid: '',
     otp: '',
     fullName: '',
-    dob: '',
-    gender: '',
     phone: '',
     email: '',
   });
@@ -36,8 +34,11 @@ export default function Signup() {
     if (!otpSent) {
       // Request OTP for Registration
       try {
-        const response = await axios.post(`${apiBaseUrl}/request-registration-otp`, null, {
-          params: { abha_id: formData.abhaid }
+        const response = await axios.post(`${apiBaseUrl}/request-otp`, { // Changed endpoint
+          name: formData.fullName,
+          phone_number: formData.phone,
+          abha_id: formData.abhaid,
+          email: formData.email,
         });
         if (response.status === 200) {
           setOtpSent(true);
@@ -50,21 +51,17 @@ export default function Signup() {
     } else {
       // Verify OTP and complete registration
       try {
-        const response = await axios.post(`${apiBaseUrl}/register-verify-otp`, {
-          abha_id: formData.abhaid,
-          otp: formData.otp,
-          full_name: formData.fullName,
-          dob: formData.dob,
-          gender: formData.gender,
-          phone: formData.phone,
-          email: formData.email,
+        const response = await axios.post(`${apiBaseUrl}/register`, null, { // Changed endpoint and body to params
+          params: {
+            abha_id: formData.abhaid,
+            otp: formData.otp
+          }
         });
-        if (response.data.access_token) {
-          localStorage.setItem('authToken', response.data.access_token);
-          localStorage.setItem('abhaId', formData.abhaid);
-          setSuccessMessage('Registration successful! Redirecting to home page...');
+        if (response.status === 201) { // API returns 201 Created
+          // No access token on registration, user needs to login
+          setSuccessMessage('Registration successful! Please login to continue.');
           setTimeout(() => {
-            navigate('/'); // Redirect to home page on successful registration
+            navigate('/login'); // Redirect to login page after successful registration
           }, 1500);
         }
       } catch (err) {
@@ -109,38 +106,6 @@ export default function Signup() {
                         placeholder="Enter your full name"
                         required
                       />
-                    </div>
-                    <div>
-                      <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-1">
-                        Date of Birth
-                      </label>
-                      <input
-                        type="date"
-                        id="dob"
-                        name="dob"
-                        value={formData.dob}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">
-                        Gender
-                      </label>
-                      <select
-                        id="gender"
-                        name="gender"
-                        value={formData.gender}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
-                        required
-                      >
-                        <option value="">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                      </select>
                     </div>
                     <div>
                       <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
