@@ -25,7 +25,7 @@ export default function Login() {
     e.preventDefault();
     setError(''); // Clear previous errors
 
-    const apiBaseUrl = 'https://ayush-auth.vercel.app';
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
     if (!otpSent) {
       // Request OTP for Login

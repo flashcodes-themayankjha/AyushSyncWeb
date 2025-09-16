@@ -31,7 +31,7 @@ export default function Signup() {
     setError(''); // Clear previous errors
     setSuccessMessage(''); // Clear previous success messages
 
-    const apiBaseUrl = 'https://ayush-auth.vercel.app';
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
     if (!otpSent) {
       // Request OTP for Registration
