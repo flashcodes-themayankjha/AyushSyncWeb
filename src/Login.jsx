@@ -11,6 +11,7 @@ export default function Login() {
   });
   const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // New state for success messages
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +52,10 @@ export default function Login() {
         if (response.data.access_token) {
           localStorage.setItem('authToken', response.data.access_token);
           localStorage.setItem('abhaId', formData.abhaid);
-          navigate('/profile'); // Redirect to profile page on successful login
+          setSuccessMessage('Logged in successfully!'); // Set success message
+          setTimeout(() => {
+            navigate('/'); // Redirect to home page after a short delay
+          }, 1500); // Redirect after 1.5 seconds
         }
       } catch (err) {
         setError(err.response?.data?.detail || 'Invalid OTP. Please try again.');
@@ -115,6 +119,7 @@ export default function Login() {
                 )}
               </div>
 
+              {successMessage && <p className="mt-4 text-center text-green-500 text-sm">{successMessage}</p>}
               {error && <p className="mt-4 text-center text-red-500 text-sm">{error}</p>}
 
               <div className="mt-8">
