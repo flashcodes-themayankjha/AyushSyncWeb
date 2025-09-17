@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import NamasteTable from './components/NamasteTable';
 import IcdCards from './components/IcdCards';
+import InfoCards from './components/InfoCards'; // New component we'll create
 import data from './data/data';
 
 const Search = () => {
@@ -36,11 +37,10 @@ const Search = () => {
   return (
     <>
       <Navbar />
-      <main className="px-6 py-30 bg-gray-50 min-h-screen">  {/* increased py */}
-        <div className="max-w-4xl mx-auto"> {/* narrower max-width for better centering */}
-
-          {/* 🔍 Search box */}
-          <div className="relative mb-12"> {/* bigger margin bottom */}
+      <main className="px-6 py-30 bg-gray-50 min-h-screen">
+        <div className="max-w-4xl mx-auto">
+          {/* Search box */}
+          <div className="relative mb-12">
             <svg
               className="w-6 h-6 absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
               fill="none"
@@ -77,9 +77,11 @@ const Search = () => {
             <div className="space-y-12">
               <NamasteTable results={filteredResults} />
               <IcdCards results={filteredResults} />
+              {/* Add InfoCards component to display the card layout */}
+              <InfoCards results={filteredResults} />
             </div>
           ) : (
-            <div className="text-center mt-16"> {/* more space above popular searches */}
+            <div className="text-center mt-16">
               <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">
                 Popular Searches
               </h3>
@@ -106,11 +108,13 @@ const Search = () => {
               <p className="mt-6 text-gray-500 text-base">
                 Start typing above to search ICD & NAMC codes
               </p>
+
+              {/* Display the info cards when no search is performed */}
+              <InfoCards />
             </div>
           )}
         </div>
       </main>
-
       <Footer />
     </>
   );
