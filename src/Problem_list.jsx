@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import data from './data/data';
 
 const Problem_list = () => {
     const [selectedCondition, setSelectedCondition] = useState('')
@@ -28,28 +29,30 @@ const Problem_list = () => {
         }
     }, [])
 
-    const conditions = [
-        { name: 'Hypertension', localCode: 'NAMASTE-001', icdCode: 'I10' },
-        { name: 'Type 2 Diabetes Mellitus', localCode: 'NAMASTE-002', icdCode: 'E119' },
-        { name: 'Asthma', localCode: 'NAMASTE-003', icdCode: 'J45.909' },
-        { name: 'Chronic Obstructive Pulmonary Disease', localCode: 'NAMASTE-004', icdCode: 'J44.1' },
-        { name: 'Coronary Artery Disease', localCode: 'NAMASTE-005', icdCode: 'I25.9' },
-        { name: 'Heart Failure', localCode: 'NAMASTE-006', icdCode: 'I50.9' },
-        { name: 'Chronic Kidney Disease', localCode: 'NAMASTE-007', icdCode: 'N18.6' },
-        { name: 'Osteoarthritis', localCode: 'NAMASTE-008', icdCode: 'M19.9' },
-        { name: 'Depression', localCode: 'NAMASTE-009', icdCode: 'F32.9' },
-        { name: 'Anxiety Disorder', localCode: 'NAMASTE-010', icdCode: 'F41.9' },
-        { name: 'Migraine', localCode: 'NAMASTE-011', icdCode: 'G43.909' },
-        { name: 'Epilepsy', localCode: 'NAMASTE-012', icdCode: 'G40.909' },
-        { name: 'Rheumatoid Arthritis', localCode: 'NAMASTE-013', icdCode: 'M06.9' },
-        { name: 'Hypothyroidism', localCode: 'NAMASTE-014', icdCode: 'E03.9' },
-        { name: 'Hyperthyroidism', localCode: 'NAMASTE-015', icdCode: 'E05.90' }
-    ]
+    // Create conditions from the imported data
+    const conditions = data.matches.map((item, index) => {
+        // Generate a unique local code based on the index
+        const localCode = `NAMASTE-${String(index + 1).padStart(3, '0')}`
 
-    const filteredConditions = conditions.filter(condition =>
+        return {
+            name: item.icd_title || 'Unknown Condition',
+            localCode: item.namc_code || localCode,
+            icdCode: item.icd_code || 'N/A',
+            category: item.category || 'Unknown',
+            shortDefinition: item.short_definition || ''
+        }
+    })
+
+    // Remove duplicates based on condition name
+    const uniqueConditions = conditions.filter((condition, index, self) =>
+        index === self.findIndex((c) => c.name === condition.name)
+    )
+
+    const filteredConditions = uniqueConditions.filter(condition =>
         condition.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         condition.localCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        condition.icdCode.toLowerCase().includes(searchQuery.toLowerCase())
+        condition.icdCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        condition.category.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
     const handleSearchChange = (e) => {
@@ -101,7 +104,7 @@ const Problem_list = () => {
 
     const addCondition = () => {
         if (selectedCondition && !problemList.find(item => item.name === selectedCondition)) {
-            const condition = conditions.find(c => c.name === selectedCondition)
+            const condition = uniqueConditions.find(c => c.name === selectedCondition)
             if (condition) {
                 setProblemList([...problemList, condition])
             }
@@ -165,13 +168,14 @@ const Problem_list = () => {
     const downloadAsCSV = () => {
         if (problemList.length === 0) return
 
-        const headers = ['Condition', 'NAMASTE Code', 'ICD-11 Mapped Code']
+        const headers = ['Condition', 'NAMASTE Code', 'ICD-11 Mapped Code', 'Category']
         const csvContent = [
             headers.join(','),
             ...problemList.map(condition => [
                 `"${condition.name}"`,
                 `"${condition.localCode}"`,
-                `"${condition.icdCode}"`
+                `"${condition.icdCode}"`,
+                `"${condition.category}"`
             ].join(','))
         ].join('\n')
 
@@ -270,6 +274,7 @@ const Problem_list = () => {
                                 <th>Condition</th>
                                 <th>NAMASTE Code</th>
                                 <th>ICD-11 Mapped Code</th>
+                                <th>Category</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -278,6 +283,7 @@ const Problem_list = () => {
                                     <td><strong>${condition.name}</strong></td>
                                     <td>${condition.localCode}</td>
                                     <td>${condition.icdCode}</td>
+                                    <td>${condition.category}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -362,7 +368,7 @@ const Problem_list = () => {
                                             >
                                                 <div className="font-medium text-gray-900 font-spline text-base">{condition.name}</div>
                                                 <div className="text-sm text-gray-500 font-spline">
-                                                    {condition.localCode} • {condition.icdCode}
+                                                    {condition.localCode} • {condition.icdCode} • {condition.category}
                                                 </div>
                                             </div>
                                         ))}
@@ -397,17 +403,19 @@ const Problem_list = () => {
                             </div>
                         ) : (
                             <div className="overflow-hidden">
-                                <div className="grid grid-cols-4 gap-2 sm:gap-4 p-2 sm:p-4 bg-gray-50 font-bold text-xs sm:text-sm text-gray-700 min-w-[600px] font-spline">
+                                <div className="grid grid-cols-5 gap-2 sm:gap-4 p-2 sm:p-4 bg-gray-50 font-bold text-xs sm:text-sm text-gray-700 min-w-[600px] font-spline">
                                     <div>CONDITION</div>
                                     <div>NAMASTE CODE</div>
                                     <div>ICD-11 MAPPED CODE</div>
+                                    <div>CATEGORY</div>
                                     <div></div>
                                 </div>
                                 {problemList.map((condition, index) => (
-                                    <div key={index} className="grid grid-cols-4 gap-2 sm:gap-4 p-2 sm:p-4 border-t border-gray-100 min-w-[600px]">
+                                    <div key={index} className="grid grid-cols-5 gap-2 sm:gap-4 p-2 sm:p-4 border-t border-gray-100 min-w-[600px]">
                                         <div className="font-medium text-sm sm:text-base font-spline">{condition.name}</div>
                                         <div className="text-gray-600 text-sm sm:text-base font-spline">{condition.localCode}</div>
                                         <div className="text-gray-600 text-sm sm:text-base font-spline">{condition.icdCode}</div>
+                                        <div className="text-gray-600 text-sm sm:text-base font-spline">{condition.category}</div>
                                         <div>
                                             <button
                                                 onClick={() => removeCondition(condition.name)}
