@@ -11,7 +11,7 @@ import About from "./components/About.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import Comingsoon from "./components/Comingsoon.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-
+import Apidocs from "./Apidocs.jsx"
 
 function RootLayout() {
     return (
@@ -33,13 +33,13 @@ const router = createBrowserRouter([
             { path: "about", element: <About /> },
             { path: "contact", element: <Comingsoon /> },
             { path: "blog", element: <Comingsoon /> },
-            { path: "documentation", element: <Comingsoon /> },
+            { path: "documentation", element: <Apidocs /> },
             { path: "privacy_policy", element: <Comingsoon /> },
             { path: "terms", element: <Comingsoon /> },
             { path: "facebook", element: <Comingsoon /> },
             { path: "twitter", element: <Comingsoon /> },
             { path: "linkedin", element: <Comingsoon /> },
-            { path: "apidocs", element: <Comingsoon/> },
+            { path: "apidocs", element: <Apidocs /> },
             // Protected Routes
             {
                 element: <ProtectedRoute />,
